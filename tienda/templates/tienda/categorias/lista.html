@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2>Lista de categorías</h2>
+        <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva categoría</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                    <tr>
+                        <td>{{ categoria.id }}</td>
+                        <td>{{ categoria.nombre }}</td>
+                        <td>{{ categoria.descripcion|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'editar_categoria' categoria.pk %}" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'eliminar_categoria' categoria.pk %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No hay categorías registradas.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

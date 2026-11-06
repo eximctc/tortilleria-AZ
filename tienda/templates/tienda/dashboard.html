@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - Mi Negocio{% endblock %}
+{% block content %}
+<h2 style="margin-bottom:20px;">Panel de Control</h2>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px;">
+    <div class="card" style="text-align:center;">
+        <h3 style="color:#2563eb;">📊 {{ total_categorias }}</h3>
+        <p>Categorías</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <h3 style="color:#16a34a;">📦 {{ total_productos }}</h3>
+        <p>Productos</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <h3 style="color:#d97706;">👥 {{ total_clientes }}</h3>
+        <p>Clientes</p>
+    </div>
+    <div class="card" style="text-align:center;">
+        <h3 style="color:#dc2626;">❌ {{ productos_sin_stock }}</h3>
+        <p>Sin stock</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Resumen general</h3>
+    <p><strong>Productos activos:</strong> {{ productos_activos }}</p>
+    <p><strong>Valor estimado del inventario:</strong> ${{ valor_inventario }}</p>
+</div>
+
+<div class="card">
+    <h3>Productos por categoría</h3>
+    <table>
+        <thead>
+            <tr><th>Categoría</th><th># Productos</th></tr>
+        </thead>
+        <tbody>
+            {% for cat in por_categoria %}
+            <tr>
+                <td>{{ cat.nombre }}</td>
+                <td>{{ cat.num_productos }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2">No hay categorías registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>Últimos productos agregados</h3>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>
+        </thead>
+        <tbody>
+            {% for producto in ultimos_productos %}
+            <tr>
+                <td>{{ producto.id }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>${{ producto.precio }}</td>
+                <td>{{ producto.stock }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No hay productos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'lista_productos' %}" class="btn btn-primary" style="margin-top:15px;">Ver todos los productos</a>
+</div>
+
+<div class="card">
+    <h3>Accesos rápidos</h3>
+    <a href="{% url 'crear_producto' %}" class="btn btn-success">+ Nuevo Producto</a>
+    <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva Categoría</a>
+    <a href="{% url 'crear_cliente' %}" class="btn btn-success">+ Nuevo Cliente</a>
+</div>
+{% endblock %}

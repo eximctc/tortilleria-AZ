@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Mi Negocio{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h2>Bienvenido a Mi Negocio</h2>
+        <p>Software que crece con tu negocio.</p>
+    </div>
+
+    <div class="card">
+        <h3>Categorías</h3>
+        <ul>
+            {% for categoria in categorias %}
+                <li>{{ categoria.nombre }}</li>
+            {% empty %}
+                <li>No hay categorías registradas.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>Productos activos</h3>
+        <ul>
+            {% for producto in productos %}
+                <li>{{ producto.nombre }} - ${{ producto.precio }} (Stock: {{ producto.stock }})</li>
+            {% empty %}
+                <li>No hay productos activos.</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
