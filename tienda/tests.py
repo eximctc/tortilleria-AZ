@@ -7,6 +7,49 @@ from .models import Categoria, Cliente, Producto
 
 @override_settings(ALLOWED_HOSTS=["testserver"])
 class TiendaViewsTests(TestCase):
+    def test_registro_crea_usuario_normal_y_inicia_sesion(self):
+        response = self.client.post(
+            "/registro/",
+            {
+                "username": "nuevo",
+                "first_name": "Nuevo",
+                "last_name": "Usuario",
+                "email": "nuevo@example.com",
+                "password1": "UnaClaveSegura123!",
+                "password2": "UnaClaveSegura123!",
+            },
+        )
+
+        usuario = get_user_model().objects.get(username="nuevo")
+        self.assertRedirects(response, "/")
+        self.assertTrue(usuario.check_password("UnaClaveSegura123!"))
+        self.assertFalse(usuario.is_staff)
+        self.assertFalse(usuario.is_superuser)
+        self.assertEqual(str(self.client.session["_auth_user_id"]), str(usuario.pk))
+
+    def test_registro_rechaza_correo_ya_utilizado(self):
+        get_user_model().objects.create_user(
+            username="existente",
+            email="repetido@example.com",
+            password="UnaClaveSegura123!",
+        )
+
+        response = self.client.post(
+            "/registro/",
+            {
+                "username": "nuevo",
+                "first_name": "Nuevo",
+                "last_name": "Usuario",
+                "email": "REPETIDO@example.com",
+                "password1": "UnaClaveSegura123!",
+                "password2": "UnaClaveSegura123!",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Este correo electrónico ya está registrado.")
+        self.assertFalse(get_user_model().objects.filter(username="nuevo").exists())
+
     def test_inicio_muestra_categorias_y_productos_activos(self):
         categoria = Categoria.objects.create(nombre="Tortillas")
         Producto.objects.create(

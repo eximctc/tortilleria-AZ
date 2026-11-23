@@ -1,10 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum
 from .models import Categoria, Producto, Cliente
-from .forms import CategoriaForm, ProductoForm, ClienteForm
+from .forms import CategoriaForm, ProductoForm, ClienteForm, RegistroForm
+
+
+def registro(request):
+    if request.user.is_authenticated:
+        return redirect('inicio')
+
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            usuario = form.save()
+            login(request, usuario)
+            messages.success(request, f'Bienvenido, {usuario.first_name}. Tu cuenta fue creada correctamente.')
+            return redirect('inicio')
+    else:
+        form = RegistroForm()
+
+    return render(request, 'registration/registro.html', {'form': form})
 
 
 def hola_mundo(request):

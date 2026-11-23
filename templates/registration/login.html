@@ -11,5 +11,6 @@
     {% if form.errors %}
         <p style="color: #dc2626; margin-top: 10px;">Usuario o contraseña incorrectos.</p>
     {% endif %}
+    <p style="margin-top: 16px;">¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a>.</p>
 </div>
 {% endblock %}
