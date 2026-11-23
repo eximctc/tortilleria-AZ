@@ -84,8 +84,36 @@ class TiendaViewsTests(TestCase):
 
         self.assertRedirects(response, "/login/?next=/dashboard/")
 
+    def test_usuario_normal_no_puede_acceder_a_vistas_de_personal(self):
+        usuario = get_user_model().objects.create_user(
+            username="usuario",
+            password="pass123",
+        )
+        self.client.force_login(usuario)
+
+        paths = (
+            "/dashboard/",
+            "/clientes/",
+            "/categorias/crear/",
+            "/categorias/editar/1/",
+            "/categorias/eliminar/1/",
+            "/productos/crear/",
+            "/productos/editar/1/",
+            "/productos/eliminar/1/",
+            "/clientes/crear/",
+            "/clientes/editar/1/",
+            "/clientes/eliminar/1/",
+        )
+        for path in paths:
+            with self.subTest(path=path):
+                self.assertEqual(self.client.get(path).status_code, 403)
+
     def test_dashboard_muestra_resumen_a_usuario_autenticado(self):
-        usuario = get_user_model().objects.create_user(username="admin", password="pass123")
+        usuario = get_user_model().objects.create_user(
+            username="admin",
+            password="pass123",
+            is_staff=True,
+        )
         self.client.force_login(usuario)
         categoria = Categoria.objects.create(nombre="Tortillas")
         Producto.objects.create(

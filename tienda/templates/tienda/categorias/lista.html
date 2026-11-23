@@ -5,7 +5,9 @@
 {% block content %}
     <div class="card">
         <h2>Lista de categorías</h2>
-        <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva categoría</a>
+        {% if user.is_staff %}
+            <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva categoría</a>
+        {% endif %}
         <table>
             <thead>
                 <tr>
@@ -22,8 +24,10 @@
                         <td>{{ categoria.nombre }}</td>
                         <td>{{ categoria.descripcion|default:"-" }}</td>
                         <td>
-                            <a href="{% url 'editar_categoria' categoria.pk %}" class="btn btn-warning">Editar</a>
-                            <a href="{% url 'eliminar_categoria' categoria.pk %}" class="btn btn-danger">Eliminar</a>
+                            {% if user.is_staff %}
+                                <a href="{% url 'editar_categoria' categoria.pk %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'eliminar_categoria' categoria.pk %}" class="btn btn-danger">Eliminar</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% empty %}

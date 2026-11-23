@@ -3,7 +3,9 @@
 {% block content %}
 <div class="card">
     <h2>Lista de Productos</h2>
-    <a href="{% url 'crear_producto' %}" class="btn btn-success">+ Nuevo Producto</a>
+    {% if user.is_staff %}
+        <a href="{% url 'crear_producto' %}" class="btn btn-success">+ Nuevo Producto</a>
+    {% endif %}
     <table>
         <thead>
             <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Activo</th><th>Acciones</th></tr>
@@ -18,8 +20,10 @@
                 <td>{{ producto.categoria.nombre }}</td>
                 <td>{% if producto.activo %}✅{% else %}❌{% endif %}</td>
                 <td>
-                    <a href="{% url 'editar_producto' producto.pk %}" class="btn btn-warning">Editar</a>
-                    <a href="{% url 'eliminar_producto' producto.pk %}" class="btn btn-danger">Eliminar</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'editar_producto' producto.pk %}" class="btn btn-warning">Editar</a>
+                        <a href="{% url 'eliminar_producto' producto.pk %}" class="btn btn-danger">Eliminar</a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}

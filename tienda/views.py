@@ -1,3 +1,6 @@
+from functools import wraps
+
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
@@ -6,6 +9,16 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Sum
 from .models import Categoria, Producto, Cliente
 from .forms import CategoriaForm, ProductoForm, ClienteForm, RegistroForm
+
+
+def staff_required(view_func):
+    @wraps(view_func)
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_staff:
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+
+    return login_required(wrapped_view)
 
 
 def registro(request):
@@ -36,7 +49,7 @@ def inicio(request):
     return render(request, 'tienda/inicio.html', {'productos': productos, 'categorias': categorias})
 
 
-@login_required
+@staff_required
 def dashboard(request):
     por_categoria = Categoria.objects.annotate(
         num_productos=Count('producto')
@@ -59,7 +72,7 @@ def dashboard(request):
 def listar_categorias(request):
     categorias = Categoria.objects.all()
     return render(request, 'tienda/categorias/lista.html', {'categorias': categorias})
-@login_required
+@staff_required
 def crear_categoria(request):
     if request.method == 'POST':
         form = CategoriaForm(request.POST)
@@ -70,7 +83,7 @@ def crear_categoria(request):
     else:
         form = CategoriaForm()
     return render(request, 'tienda/categorias/form.html', {'form': form, 'titulo': 'Crear Categoría'})
-@login_required
+@staff_required
 def editar_categoria(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':
@@ -82,7 +95,7 @@ def editar_categoria(request, pk):
     else:
         form = CategoriaForm(instance=categoria)
     return render(request, 'tienda/categorias/form.html', {'form': form, 'titulo': 'Editar Categoría'})
-@login_required
+@staff_required
 def eliminar_categoria(request, pk):
     categoria = get_object_or_404(Categoria, pk=pk)
     if request.method == 'POST':
@@ -94,7 +107,7 @@ def eliminar_categoria(request, pk):
 def listar_productos(request):
     productos = Producto.objects.all()
     return render(request, 'tienda/productos/lista.html', {'productos': productos})
-@login_required
+@staff_required
 def crear_producto(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST)
@@ -105,7 +118,7 @@ def crear_producto(request):
     else:
         form = ProductoForm()
     return render(request, 'tienda/productos/form.html', {'form': form, 'titulo': 'Crear Producto'})
-@login_required
+@staff_required
 def editar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     if request.method == 'POST':
@@ -117,7 +130,7 @@ def editar_producto(request, pk):
     else:
         form = ProductoForm(instance=producto)
     return render(request, 'tienda/productos/form.html', {'form': form, 'titulo': 'Editar Producto'})
-@login_required
+@staff_required
 def eliminar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     if request.method == 'POST':
@@ -126,12 +139,12 @@ def eliminar_producto(request, pk):
         return redirect('lista_productos')
     return render(request, 'tienda/productos/eliminar.html', {'producto': producto})
 # ---------- CLIENTES (CRUD) ----------
-@login_required
+@staff_required
 def lista_clientes(request):
     clientes = Cliente.objects.all()
     return render(request, 'tienda/clientes/lista.html', {'clientes': clientes})
 
-@login_required
+@staff_required
 def crear_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST)
@@ -143,7 +156,7 @@ def crear_cliente(request):
         form = ClienteForm()
     return render(request, 'tienda/clientes/form.html', {'form': form, 'titulo': 'Crear Cliente'})
 
-@login_required
+@staff_required
 def editar_cliente(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     if request.method == 'POST':
@@ -156,7 +169,7 @@ def editar_cliente(request, pk):
         form = ClienteForm(instance=cliente)
     return render(request, 'tienda/clientes/form.html', {'form': form, 'titulo': 'Editar Cliente'})
 
-@login_required
+@staff_required
 def eliminar_cliente(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     if request.method == 'POST':

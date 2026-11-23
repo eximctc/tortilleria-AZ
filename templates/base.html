@@ -83,10 +83,12 @@ form p { margin-bottom: 12px; }
             <a href="{% url 'inicio' %}">Inicio</a>
             <a href="{% url 'lista_productos' %}">Productos</a>
             <a href="{% url 'lista_categorias' %}">Categorías</a>
-            <a href="{% url 'lista_clientes' %}">Clientes</a>
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}">Dashboard</a>
                 <span style="color:#38bdf8;">👤{{ user.username }}</span>
+                {% if user.is_staff %}
+                    <a href="{% url 'lista_clientes' %}">Clientes</a>
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                {% endif %}
                 <form action="{% url 'logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger" style="margin-left:10px;">Cerrar sesión</button>
