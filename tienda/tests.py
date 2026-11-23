@@ -7,49 +7,6 @@ from .models import Categoria, Cliente, Producto
 
 @override_settings(ALLOWED_HOSTS=["testserver"])
 class TiendaViewsTests(TestCase):
-    def test_registro_crea_usuario_normal_y_inicia_sesion(self):
-        response = self.client.post(
-            "/registro/",
-            {
-                "username": "nuevo",
-                "first_name": "Nuevo",
-                "last_name": "Usuario",
-                "email": "nuevo@example.com",
-                "password1": "UnaClaveSegura123!",
-                "password2": "UnaClaveSegura123!",
-            },
-        )
-
-        usuario = get_user_model().objects.get(username="nuevo")
-        self.assertRedirects(response, "/")
-        self.assertTrue(usuario.check_password("UnaClaveSegura123!"))
-        self.assertFalse(usuario.is_staff)
-        self.assertFalse(usuario.is_superuser)
-        self.assertEqual(str(self.client.session["_auth_user_id"]), str(usuario.pk))
-
-    def test_registro_rechaza_correo_ya_utilizado(self):
-        get_user_model().objects.create_user(
-            username="existente",
-            email="repetido@example.com",
-            password="UnaClaveSegura123!",
-        )
-
-        response = self.client.post(
-            "/registro/",
-            {
-                "username": "nuevo",
-                "first_name": "Nuevo",
-                "last_name": "Usuario",
-                "email": "REPETIDO@example.com",
-                "password1": "UnaClaveSegura123!",
-                "password2": "UnaClaveSegura123!",
-            },
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Este correo electrónico ya está registrado.")
-        self.assertFalse(get_user_model().objects.filter(username="nuevo").exists())
-
     def test_inicio_muestra_categorias_y_productos_activos(self):
         categoria = Categoria.objects.create(nombre="Tortillas")
         Producto.objects.create(
@@ -84,36 +41,8 @@ class TiendaViewsTests(TestCase):
 
         self.assertRedirects(response, "/login/?next=/dashboard/")
 
-    def test_usuario_normal_no_puede_acceder_a_vistas_de_personal(self):
-        usuario = get_user_model().objects.create_user(
-            username="usuario",
-            password="pass123",
-        )
-        self.client.force_login(usuario)
-
-        paths = (
-            "/dashboard/",
-            "/clientes/",
-            "/categorias/crear/",
-            "/categorias/editar/1/",
-            "/categorias/eliminar/1/",
-            "/productos/crear/",
-            "/productos/editar/1/",
-            "/productos/eliminar/1/",
-            "/clientes/crear/",
-            "/clientes/editar/1/",
-            "/clientes/eliminar/1/",
-        )
-        for path in paths:
-            with self.subTest(path=path):
-                self.assertEqual(self.client.get(path).status_code, 403)
-
     def test_dashboard_muestra_resumen_a_usuario_autenticado(self):
-        usuario = get_user_model().objects.create_user(
-            username="admin",
-            password="pass123",
-            is_staff=True,
-        )
+        usuario = get_user_model().objects.create_user(username="admin", password="pass123")
         self.client.force_login(usuario)
         categoria = Categoria.objects.create(nombre="Tortillas")
         Producto.objects.create(

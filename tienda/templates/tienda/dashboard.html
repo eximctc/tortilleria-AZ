@@ -71,10 +71,8 @@
 
 <div class="card">
     <h3>Accesos rápidos</h3>
-    {% if user.is_staff %}
-        <a href="{% url 'crear_producto' %}" class="btn btn-success">+ Nuevo Producto</a>
-        <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva Categoría</a>
-        <a href="{% url 'crear_cliente' %}" class="btn btn-success">+ Nuevo Cliente</a>
-    {% endif %}
+    <a href="{% url 'crear_producto' %}" class="btn btn-success">+ Nuevo Producto</a>
+    <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva Categoría</a>
+    <a href="{% url 'crear_cliente' %}" class="btn btn-success">+ Nuevo Cliente</a>
 </div>
 {% endblock %}
