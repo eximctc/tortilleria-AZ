@@ -19,3 +19,6 @@ Thumbs.db
 # Configuración del editor
 .vscode/
 .idea/
+
+# Archivos estáticos generados por Django
+staticfiles/
