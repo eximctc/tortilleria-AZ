@@ -4,6 +4,7 @@
 <div class="card">
     <h2>Lista de Clientes</h2>
     <a href="{% url 'crear_cliente' %}" class="btn btn-success">+ Nuevo Cliente</a>
+    <div class="table-responsive">
     <table>
         <thead>
             <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Dirección</th><th>Acciones</th></tr>
@@ -26,6 +27,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 {% endblock %}
 

@@ -6,6 +6,7 @@
     <div class="card">
         <h2>Lista de categorías</h2>
         <a href="{% url 'crear_categoria' %}" class="btn btn-success">+ Nueva categoría</a>
+        <div class="table-responsive">
         <table>
             <thead>
                 <tr>
@@ -31,5 +32,6 @@
                 {% endfor %}
             </tbody>
         </table>
+        </div>
     </div>
 {% endblock %}

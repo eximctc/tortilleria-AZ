@@ -4,6 +4,7 @@
 <div class="card">
     <h2>Lista de Productos</h2>
     <a href="{% url 'crear_producto' %}" class="btn btn-success">+ Nuevo Producto</a>
+    <div class="table-responsive">
     <table>
         <thead>
             <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Activo</th><th>Acciones</th></tr>
@@ -27,5 +28,6 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 {% endblock %}

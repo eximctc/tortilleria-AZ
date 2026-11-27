@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}Dashboard - Mi Negocio{% endblock %}
 {% block content %}
-<h2 style="margin-bottom:20px;">Panel de Control</h2>
+<h2>Panel de Control</h2>
 
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px;">
-    <div class="card" style="text-align:center;">
-        <h3 style="color:#2563eb;">📊 {{ total_categorias }}</h3>
+<div class="stat-grid">
+    <div class="card stat-card stat-card--primary">
+        <h3>📊 {{ total_categorias }}</h3>
         <p>Categorías</p>
     </div>
-    <div class="card" style="text-align:center;">
-        <h3 style="color:#16a34a;">📦 {{ total_productos }}</h3>
+    <div class="card stat-card stat-card--success">
+        <h3>📦 {{ total_productos }}</h3>
         <p>Productos</p>
     </div>
-    <div class="card" style="text-align:center;">
-        <h3 style="color:#d97706;">👥 {{ total_clientes }}</h3>
+    <div class="card stat-card stat-card--warning">
+        <h3>👥 {{ total_clientes }}</h3>
         <p>Clientes</p>
     </div>
-    <div class="card" style="text-align:center;">
-        <h3 style="color:#dc2626;">❌ {{ productos_sin_stock }}</h3>
+    <div class="card stat-card stat-card--danger">
+        <h3>❌ {{ productos_sin_stock }}</h3>
         <p>Sin stock</p>
     </div>
 </div>
@@ -30,6 +30,7 @@
 
 <div class="card">
     <h3>Productos por categoría</h3>
+    <div class="table-responsive">
     <table>
         <thead>
             <tr><th>Categoría</th><th># Productos</th></tr>
@@ -45,10 +46,12 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
 </div>
 
 <div class="card">
     <h3>Últimos productos agregados</h3>
+    <div class="table-responsive">
     <table>
         <thead>
             <tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th></tr>
@@ -66,7 +69,8 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'lista_productos' %}" class="btn btn-primary" style="margin-top:15px;">Ver todos los productos</a>
+    </div>
+    <a href="{% url 'lista_productos' %}" class="btn btn-primary">Ver todos los productos</a>
 </div>
 
 <div class="card">
